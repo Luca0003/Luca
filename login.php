@@ -1,4 +1,9 @@
 <?php
+
+    
+    
+session_start();
+
 require_once __DIR__ . '/sezioni/session.php';
 require_once __DIR__ . '/sezioni/util.php';
 require_once __DIR__ . '/config/db.php';
@@ -24,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   <div class="card-body">
     <div class="row g-3">
-      <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required>
+      <div class="col-md-6"><label class="form-label">Email</label><input type="email" name="email" class="form-control" required value="<?= e(old('email')) ?>">
       <div class="form-text" id="login_email_hint"></div></div>
       <div class="col-md-6"><label class="form-label">Password</label><input type="password" name="password" class="form-control" required>
       <div class="form-text" id="login_pw_hint"></div></div>

@@ -102,3 +102,27 @@ function suggest_get(array $params = []) : array {
   }
   return is_array($res) ? $res : [];
 }
+
+
+// --- Sticky form helpers ---
+if (!function_exists('old')) {
+    function old($key, $default = '') {
+        if (isset($_POST[$key])) return $_POST[$key];
+        if (isset($_SESSION['old'][$key])) return $_SESSION['old'][$key];
+        return $default;
+    }
+}
+if (!function_exists('old_checked')) {
+    function old_checked($key, $value) {
+        $val = $_POST[$key] ?? ($_SESSION['old'][$key] ?? null);
+        return ($val == $value) ? 'checked' : '';
+    }
+}
+if (!function_exists('old_selected')) {
+    function old_selected($key, $value) {
+        $val = $_POST[$key] ?? ($_SESSION['old'][$key] ?? null);
+        return ($val == $value) ? 'selected' : '';
+    }
+}
+// --- end helpers ---
+

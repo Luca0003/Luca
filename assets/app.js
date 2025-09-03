@@ -44,3 +44,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+// --- Inline status update in catalog ---
+document.addEventListener('DOMContentLoaded', function(){
+  document.body.addEventListener('change', async function(e){
+    const sel = e.target.closest('.status-select');
+    if (!sel) return;
+    const id = sel.getAttribute('data-id');
+    const token = sel.getAttribute('data-csrf');
+    const next = sel.value;
+    if (!id || !token || !next) return;
+    sel.disabled = true;
+    try {
+      const resp = await fetch('books-status.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams({ id, next, csrf_token: token })
+      });
+      const data = await resp.json();
+      if (!data || !data.ok) {
+        alert((data && data.msg) ? data.msg : 'Errore durante l\'aggiornamento dello stato.');
+      } else {
+        const hint = sel.parentElement.querySelector('.status-hint');
+        if (hint) { hint.classList.remove('d-none'); hint.classList.add('show'); setTimeout(()=>{ hint.classList.add('d-none'); hint.classList.remove('show'); }, 1200); }
+      }
+    } catch (err) {
+      alert('Errore di rete durante l\'aggiornamento dello stato.');
+    } finally {
+      sel.disabled = false;
+    }
+  });
+});

@@ -1,4 +1,9 @@
 <?php
+
+    
+    
+session_start();
+
 require_once __DIR__ . '/sezioni/session.php';
 require_once __DIR__ . '/sezioni/util.php';
 require_once __DIR__ . '/config/db.php';
@@ -18,7 +23,7 @@ if ($name === '' || !preg_match('/^[A-Za-z0-9._-]{3,32}$/', $name)) {
 }
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = 'Email non valida.';
-    if (strlen($pass) < 12) $errors[] = 'La password deve avere almeno 12 caratteri.'; if (!preg_match('/[A-Z]/', $pass)) $errors[] = 'Serve almeno una lettera maiuscola.'; if (!preg_match('/[a-z]/', $pass)) $errors[] = 'Serve almeno una lettera minuscola.'; if (!preg_match('/[0-9]/', $pass)) $errors[] = 'Serve almeno una cifra.'; if (!preg_match('/[^A-Za-z0-9]/', $pass)) $errors[] = 'Serve almeno un simbolo.';
+    if (strlen($pass) !== 12) $errors[] = 'La password deve avere esattamente 12 caratteri'; if (!preg_match('/[A-Z]/', $pass)) $errors[] = 'Serve almeno una lettera maiuscola.'; if (!preg_match('/[a-z]/', $pass)) $errors[] = 'Serve almeno una lettera minuscola.'; if (!preg_match('/[0-9]/', $pass)) $errors[] = 'Serve almeno una cifra.'; if (!preg_match('/[^A-Za-z0-9]/', $pass)) $errors[] = 'Serve almeno un simbolo.';
     if ($pass !== $pass2) $errors[] = 'Le password non coincidono.';
     if (empty($errors)) {
         $stmt = $pdo->prepare('SELECT id FROM users WHERE email = ?'); $stmt->execute([$email]);
@@ -43,15 +48,15 @@ if ($name === '' || !preg_match('/^[A-Za-z0-9._-]{3,32}$/', $name)) {
   <input type="hidden" name="csrf_token" value="<?= e(csrf_token()) ?>">
   <div class="card-body">
     <div class="row g-3">
-      <div class="col-md-6"><label class="form-label">Username</label><input type="text" name="name" required class="form-control" placeholder="Es. Aldo Moro">
+      <div class="col-md-6"><label class="form-label">Username</label><input type="text" name="name" required class="form-control" placeholder="Es. Mario" value="<?= e(old('name')) ?>">
           <div class="form-text" id="uname_hint">Lo username deve essere unico. Controllo…</div></div>
-      <div class="col-md-6"><label class="form-label">Email <span class="text-danger">*</span></label><input type="email" name="email" class="form-control" required>
+      <div class="col-md-6"><label class="form-label">Email <span class="text-danger">*</span></label><input type="email" name="email" class="form-control" required value="<?= e(old('email')) ?>">
           <div class="form-text" id="email_hint">L\'email deve essere unica. Controllo…</div></div>
-      <div class="col-md-6"><label class="form-label">Password <span class="text-danger">*</span></label><input type="password" name="password" class="form-control" required>
+      <div class="col-md-6"><label class="form-label">Password <span class="text-danger">*</span></label><input type="password" name="password" class="form-control" required minlength="12" maxlength="12" pattern=".{12}">
           <div class="form-text" id="pw_hint">
-            Requisiti: minimo 8 caratteri, almeno 1 maiuscola, 1 minuscola, 1 cifra, 1 simbolo.
+            Requisiti: minimo 12 caratteri, almeno 1 maiuscola, 1 minuscola, 1 cifra, 1 simbolo.
           </div></div>
-      <div class="col-md-6"><label class="form-label">Conferma Password <span class="text-danger">*</span></label><input type="password" name="password2" class="form-control" required>
+      <div class="col-md-6"><label class="form-label">Conferma Password <span class="text-danger">*</span></label><input type="password" name="password2" class="form-control" required minlength="12" maxlength="12" pattern=".{12}">
           <div class="form-text" id="pw2_hint"></div></div>
     </div>
   </div>
@@ -80,7 +85,7 @@ if ($name === '' || !preg_match('/^[A-Za-z0-9._-]{3,32}$/', $name)) {
   let t1=null, t2=null, t3=null, t4=null;
   const reUser = /^[A-Za-z0-9._\-\\]{3,32}$/;
   const rules = [
-    { re: /^.{8,}$/,       text: 'Minimo 8 caratteri' },
+    { re: /^.{12}$/,       text: 'Esattamente 12 caratteri' },
     { re: /[A-Z]/,         text: 'Almeno una maiuscola' },
     { re: /[a-z]/,         text: 'Almeno una minuscola' },
     { re: /[0-9]/,         text: 'Almeno una cifra' },

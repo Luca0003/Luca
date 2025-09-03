@@ -36,3 +36,8 @@
 
 /* Top10 grid */
 .top10-grid { display:grid; grid-template-columns: repeat(auto-fill,minmax(220px,1fr)); gap: 1rem; }
+
+.cover-cell{width:110px}
+.cover-thumb{width:88px;height:88px;object-fit:cover;border-radius:.25rem}
+
+.status-hint{transition:opacity .2s}.status-hint.show{display:block!important;opacity:1}
